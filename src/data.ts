@@ -1,5 +1,9 @@
 import type { Destination, Property, Room, Experience, Offer } from './types';
 
+// Local destination photography lives in /public/destinations/.
+// BASE_URL is '/' in dev and '/V-LORA-HOTELS-RESORTS/' on GitHub Pages.
+const IMG = (name: string) => `${import.meta.env.BASE_URL}destinations/${name}`;
+
 // ─── Destinations ────────────────────────────────────────────────────────────
 // All priceFromUSD values are in USD; runtime formatting handled by useCurrency
 
@@ -36,7 +40,7 @@ export const destinations: Destination[] = [
     lat: 7.87,
     lng: 80.77,
     coords: '7.8731° N, 80.7718° E',
-    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=600&fit=crop&auto=format',
+    image: IMG('srilanka.jpg'),
     stayCount: 1,
     signature: 'Ayurvedic ceremonies in jungle retreats',
     description: 'An island of extraordinary contrasts — ancient temples in dense jungle, colonial tea estates ascending misty highlands, and a coastline that curves between fishing villages and whale-watching waters.',
@@ -55,7 +59,7 @@ export const destinations: Destination[] = [
     lat: 35.01,
     lng: 135.77,
     coords: '35.0116° N, 135.7681° E',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=600&fit=crop&auto=format',
+    image: IMG('kyoto.jpg'),
     stayCount: 1,
     signature: 'Kaiseki dinners in centuries-old machiya',
     description: 'Ancient Japan, preserved. Kyoto moves at a considered pace — tea ceremonies, moss gardens, the soft creak of temple wood. Our property is within cycling distance of Fushimi Inari, yet perfectly removed from it.',
@@ -74,7 +78,7 @@ export const destinations: Destination[] = [
     lat: -8.34,
     lng: 115.09,
     coords: '8.3405° S, 115.0919° E',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop&auto=format',
+    image: IMG('bali.jpg'),
     stayCount: 1,
     signature: 'Jungle-edge infinity pools at altitude',
     description: 'Ubud ascends through rice terraces and sacred forests to a plateau where the sky opens and spiritual life is unperformed. Our property sits among the mist, with views of Agung at dawn.',
@@ -93,7 +97,7 @@ export const destinations: Destination[] = [
     lat: 9.54,
     lng: 100.06,
     coords: '9.5400° N, 100.0600° E',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop&auto=format',
+    image: IMG('koh-samui.jpg'),
     stayCount: 1,
     signature: 'Beachfront villas with private sea access',
     description: "Koh Samui's northern coast faces a gulf that barely moves in the dry season — warm, shallow, and the colour of green tourmaline. Our villas step directly onto their own stretch of sand.",
@@ -133,7 +137,7 @@ export const destinations: Destination[] = [
     lat: 36.39,
     lng: 25.46,
     coords: '36.3932° N, 25.4615° E',
-    image: 'https://images.unsplash.com/photo-1586096717965-60d27e60dd3f?w=800&h=600&fit=crop&auto=format',
+    image: IMG('santorini.jpg'),
     stayCount: 1,
     signature: 'Caldera-edge infinity pools at sunset',
     description: 'Whitewashed geometry against a volcanic sea. Santorini\'s beauty is geometric and elemental — curved walls, cobalt domes, and a caldera that holds the last light of every evening longer than anywhere else on earth.',
@@ -152,7 +156,7 @@ export const destinations: Destination[] = [
     lat: 48.85,
     lng: 2.35,
     coords: '48.8566° N, 2.3522° E',
-    image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&h=600&fit=crop&auto=format',
+    image: IMG('paris.jpg'),
     stayCount: 1,
     signature: 'Private hôtel particulier on the Left Bank',
     description: 'In the 7th arrondissement, behind an unlisted entrance, a restored hôtel particulier of seven suites. Paris at its most interior — art, food, long afternoons in the city\'s most composed quarter.',
@@ -171,7 +175,7 @@ export const destinations: Destination[] = [
     lat: 46.54,
     lng: 12.14,
     coords: '46.5404° N, 12.1357° E',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=600&fit=crop&auto=format',
+    image: IMG('dolomites.jpg'),
     stayCount: 1,
     signature: 'Alpine chalet spa above the treeline',
     description: 'The Dolomites are among the world\'s most improbable landscapes — rose-pink limestone towers above pine forests, meadows quilted with wildflowers, and winter light that arrives low and golden all day.',
@@ -192,7 +196,7 @@ export const destinations: Destination[] = [
     lat: 23.61,
     lng: 58.59,
     coords: '23.6100° N, 58.5900° E',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop&auto=format',
+    image: IMG('muscat.jpg'),
     stayCount: 1,
     signature: 'Desert wadi excursions at first light',
     description: 'Oman is the Arab world without performance. A coastline of fjords and sand dunes, a culture of quiet generosity, and a capital that builds for permanence. Our property faces the Gulf of Oman with desert behind.',
@@ -211,7 +215,7 @@ export const destinations: Destination[] = [
     lat: 25.20,
     lng: 55.27,
     coords: '25.2048° N, 55.2708° E',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=600&fit=crop&auto=format',
+    image: IMG('dubai.jpg'),
     stayCount: 1,
     signature: 'Private beach access on the Palm',
     description: 'On the Palm\'s frond, removed from the skyline spectacle, a low-rise residence of nineteen rooms. Direct beach access, a sea-view spa and a kitchen sourcing from the Arabian Gulf daily.',
@@ -232,7 +236,7 @@ export const destinations: Destination[] = [
     lat: -4.32,
     lng: 55.73,
     coords: '4.3200° S, 55.7300° E',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop&auto=format',
+    image: IMG('seychelles.jpg'),
     stayCount: 1,
     signature: 'Bouldered coves and private coral gardens',
     description: 'On Praslin, granite boulders worn smooth by millennia define a coastline unlike anywhere else. The Vallée de Mai is minutes away; our villas face a lagoon where the water is the same warm green as the palms.',
