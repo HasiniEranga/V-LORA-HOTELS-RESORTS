@@ -86,33 +86,44 @@ function useScrollReveals(currentPage: Page, loading: boolean) {
     if (loading) return;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const observe = () => {
+    const io = prefersReduced
+      ? null
+      : new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                io!.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.01, rootMargin: '0px 0px 0px 0px' }
+        );
+
+    // Scan for any not-yet-revealed elements and start observing them.
+    // Re-run whenever the DOM changes (page switch, filters, property
+    // selection) so dynamically added cards always reveal.
+    const scan = () => {
       const els = document.querySelectorAll<HTMLElement>('.reveal:not(.revealed), .img-reveal:not(.revealed)');
       if (prefersReduced) {
         els.forEach(el => el.classList.add('revealed'));
         return;
       }
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('revealed');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.01, rootMargin: '0px 0px 0px 0px' }
-      );
-      els.forEach(el => observer.observe(el));
-      return observer;
+      els.forEach(el => io!.observe(el));
     };
 
-    // Defer slightly so the new page DOM has rendered
-    const frame = requestAnimationFrame(() => {
-      const obs = observe();
-      return () => obs?.disconnect();
+    let frame = requestAnimationFrame(scan);
+    const mo = new MutationObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(scan);
     });
-    return () => cancelAnimationFrame(frame);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      mo.disconnect();
+      io?.disconnect();
+    };
   }, [currentPage, loading]);
 }
 
