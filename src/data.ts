@@ -236,7 +236,7 @@ export const destinations: Destination[] = [
     lat: -4.32,
     lng: 55.73,
     coords: '4.3200° S, 55.7300° E',
-    image: IMG('seychelles.jpg'),
+    image: 'https://d3hk78fplavsbl.cloudfront.net/assets/common-prod/hotel/205/423744/423744-1-hotel_carousel_large.jpg?version=9',
     stayCount: 1,
     signature: 'Bouldered coves and private coral gardens',
     description: 'On Praslin, granite boulders worn smooth by millennia define a coastline unlike anywhere else. The Vallée de Mai is minutes away; our villas face a lagoon where the water is the same warm green as the palms.',
