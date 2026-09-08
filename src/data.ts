@@ -297,7 +297,7 @@ export const destinations: Destination[] = [
     lat: 31.63,
     lng: -7.98,
     coords: '31.6295° N, 7.9811° W',
-    image: 'https://images.unsplash.com/photo-1561501878-aabd62634533?w=800&h=600&fit=crop&auto=format',
+    image: IMG('marrakech.jpg'),
     stayCount: 1,
     signature: 'Candlelit riad courtyards at dusk',
     description: "The city that seduces all five senses at once. Inside VÉLORA's restored riads, the medina's intensity becomes something else entirely — jasmine-cooled courtyards, hammam rituals, and tables set beneath the stars.",
