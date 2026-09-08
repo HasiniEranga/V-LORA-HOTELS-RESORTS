@@ -175,7 +175,7 @@ export const destinations: Destination[] = [
     lat: 46.54,
     lng: 12.14,
     coords: '46.5404° N, 12.1357° E',
-    image: IMG('dolomites.jpg'),
+    image: 'https://www.thetrainline.com/cms/media/7917/italy-dolomites-hotel-hubertus.jpg',
     stayCount: 1,
     signature: 'Alpine chalet spa above the treeline',
     description: 'The Dolomites are among the world\'s most improbable landscapes — rose-pink limestone towers above pine forests, meadows quilted with wildflowers, and winter light that arrives low and golden all day.',
