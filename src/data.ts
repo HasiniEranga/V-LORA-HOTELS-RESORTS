@@ -388,7 +388,7 @@ export const experiences: Experience[] = [
     duration: '3 hours',
     price: 380,
     location: 'Cliff Terrace',
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format',
+    image: IMG('sunset-dinner.jpg'),
     description: 'A table for two on the private terrace. Your chef prepares a menu written around the season. The sea below, the sky ahead.',
   },
   {
@@ -418,7 +418,7 @@ export const experiences: Experience[] = [
     duration: 'Full day',
     price: 1200,
     location: 'Marina',
-    image: 'https://images.unsplash.com/photo-1559521778-84816b3d2f3d?w=800&h=600&fit=crop&auto=format',
+    image: IMG('island-sail.jpg'),
     description: 'A crewed schooner, a cooler of local wine, and a coastline with no itinerary. Anchor in hidden coves, swim in clear water, and return at dusk.',
   },
   {
@@ -428,7 +428,7 @@ export const experiences: Experience[] = [
     duration: '4 hours',
     price: 520,
     location: 'Kitchen Studio',
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format',
+    image: IMG('chefs-table.webp'),
     description: 'Inside the kitchen, beside the chef. An eight-course journey through local produce, explained course by course, with wines matched from our cellar.',
   },
   {
@@ -448,7 +448,7 @@ export const experiences: Experience[] = [
     duration: '90 minutes',
     price: 120,
     location: 'Your Villa',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=600&fit=crop&auto=format',
+    image: IMG('villa-breakfast.webp'),
     description: 'Everything from the morning market, arranged beautifully and served in your garden or on your terrace. Time belongs entirely to you.',
   },
   {
