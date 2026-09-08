@@ -506,7 +506,7 @@ export const offers: Offer[] = [
     description: 'The full VÉLORA experience, designed for families. Space, freedom and activities that mean something — from morning cookery for children to evening cinema under the stars.',
     inclusions: ['Connecting rooms or villa', "Children's welcome basket", 'Daily family activity', 'Childcare (3 evenings)', 'Family boat day', 'Children dine free'],
     terms: 'Minimum 4 nights. Children 12 and under.',
-    image: 'https://images.unsplash.com/photo-1586096717965-60d27e60dd3f?w=900&h=600&fit=crop&auto=format',
+    image: IMG('family-journey.webp'),
     nights: 4,
     savings: '10%',
   },
