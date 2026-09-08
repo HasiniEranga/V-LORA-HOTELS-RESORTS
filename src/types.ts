@@ -11,6 +11,7 @@ export interface BookingState {
   rooms: number;
   selectedRoom: string;
   experiences: string[];
+  selectedOffer: string;
   step: number;
   confirmed: boolean;
   confirmationNumber: string;

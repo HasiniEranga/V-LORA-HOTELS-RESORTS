@@ -21,6 +21,7 @@ const defaultBooking: BookingState = {
   rooms: 1,
   selectedRoom: '',
   experiences: [],
+  selectedOffer: '',
   step: 1,
   confirmed: false,
   confirmationNumber: '',

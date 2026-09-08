@@ -139,7 +139,10 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
   const roomTotal = selectedRoomData ? selectedRoomData.pricePerNight * Math.max(nights, 1) : 0;
   const expTotal = selectedExps.reduce((s, e) => s + e.price, 0);
   const taxes = Math.round(roomTotal * 0.12);
-  const grandTotal = roomTotal + expTotal + taxes;
+  const appliedOffer = offers.find(o => o.id === booking.selectedOffer) || null;
+  const offerPct = appliedOffer ? (parseInt(appliedOffer.savings, 10) || 0) / 100 : 0;
+  const discount = Math.round((roomTotal + expTotal) * offerPct);
+  const grandTotal = roomTotal + expTotal + taxes - discount;
 
   const validateStep = () => {
     if (bookingStep === 1 && !booking.destination) { setError('Please select a destination.'); return false; }
@@ -228,7 +231,12 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
                 </div>
                 <div className="text-[9px] mb-4" style={{ color: '#89917F', fontStyle: 'italic' }}>{offer.terms}</div>
                 <button
-                  onClick={() => { setBookingStep(1); window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }}
+                  onClick={() => {
+                    setBooking({ ...booking, selectedOffer: offer.id, step: 1 });
+                    setBookingStep(1);
+                    setStepDir('forward'); setStepKey(k => k + 1);
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                  }}
                   className="w-full py-3 text-[10px] tracking-[0.2em] uppercase flex items-center justify-center gap-2 focus:outline-none transition-all"
                   style={{ border: '1px solid rgb(23 23 21 / 0.2)', color: '#171715' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#171715'; (e.currentTarget as HTMLButtonElement).style.color = '#F4F0E8'; }}
@@ -249,6 +257,27 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
           {/* Steps panel */}
           <div className="lg:col-span-2">
             <div className="text-[9px] tracking-[0.32em] uppercase mb-4 sm:mb-6" style={{ color: '#89917F' }}>Book Your Stay</div>
+
+            {/* Applied offer banner */}
+            {appliedOffer && (
+              <div className="flex items-center justify-between gap-4 mb-5 px-4 py-3"
+                style={{ background: 'rgb(166 138 99 / 0.1)', border: '1px solid rgb(166 138 99 / 0.3)' }}>
+                <div>
+                  <div style={{ fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#A68A63', marginBottom: 3 }}>
+                    Offer applied · Save {appliedOffer.savings}
+                  </div>
+                  <div style={{ fontSize: 13, color: '#171715' }}>
+                    <strong style={{ fontFamily: 'Playfair Display, serif', fontWeight: 500 }}>{appliedOffer.title}</strong>
+                    <span style={{ color: '#89917F' }}> · minimum {appliedOffer.nights} nights</span>
+                  </div>
+                </div>
+                <button onClick={() => setBooking({ ...booking, selectedOffer: '' })}
+                  className="focus:outline-none flex-shrink-0" aria-label="Remove offer"
+                  style={{ fontSize: 9.5, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#89917F', borderBottom: '1px solid rgb(23 23 21 / 0.2)', paddingBottom: 1 }}>
+                  Remove
+                </button>
+              </div>
+            )}
 
             {/* Mobile progress bar — replaces circles */}
             <div className="lg:hidden mb-5">
@@ -484,8 +513,9 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
                       { label: `Room (${nights || 1} night${nights !== 1 ? 's' : ''})`, val: fmt(roomTotal) },
                       { label: 'Experiences', val: fmt(expTotal) },
                       { label: 'Taxes & fees (12%)', val: fmt(taxes) },
+                      ...(discount > 0 ? [{ label: `${appliedOffer!.title} (−${appliedOffer!.savings})`, val: `− ${fmt(discount)}` }] : []),
                     ].map(row => (
-                      <div key={row.label} className="flex justify-between py-1.5 text-sm" style={{ color: '#596054' }}>
+                      <div key={row.label} className="flex justify-between py-1.5 text-sm" style={{ color: discount > 0 && row.val.startsWith('−') ? '#A68A63' : '#596054' }}>
                         <span>{row.label}</span>
                         <span>{row.val}</span>
                       </div>
@@ -566,8 +596,9 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
                       { label: 'Room', val: fmt(roomTotal) },
                       { label: 'Experiences', val: fmt(expTotal) },
                       { label: 'Taxes', val: fmt(taxes) },
+                      ...(discount > 0 ? [{ label: `Offer −${appliedOffer!.savings}`, val: `− ${fmt(discount)}` }] : []),
                     ].map(r => (
-                      <div key={r.label} className="flex justify-between py-1.5 text-xs" style={{ color: '#596054' }}>
+                      <div key={r.label} className="flex justify-between py-1.5 text-xs" style={{ color: r.val.startsWith('−') ? '#A68A63' : '#596054' }}>
                         <span>{r.label}</span><span>{r.val}</span>
                       </div>
                     ))}
