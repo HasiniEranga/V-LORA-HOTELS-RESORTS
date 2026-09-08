@@ -3,6 +3,7 @@ import type { Page, Destination } from '../types';
 import { destinations } from '../data';
 import { CloseIcon, ArrowRightIcon, LocationIcon } from '../components/Icons';
 import { useCurrency } from '../context/Currency';
+import { WORLD_LAND_PATH } from '../worldLand';
 
 interface DestinationsProps { onNavigate: (p: Page) => void; }
 
@@ -20,26 +21,6 @@ const REGION_LABELS: Record<string, string> = {
 function pinPos(lat: number, lng: number) {
   return { x: ((lng + 180) / 360) * 100, y: ((90 - lat) / 180) * 100 };
 }
-
-// Simplified continent shapes for atlas SVG (viewBox 0 0 360 180)
-const CONTINENTS = [
-  // North America
-  { id: 'na', d: 'M 38,14 L 60,14 L 105,20 L 118,30 L 120,50 L 103,60 L 92,72 L 76,72 L 64,62 L 44,48 L 35,30 Z' },
-  // South America
-  { id: 'sa', d: 'M 82,72 L 110,72 L 120,84 L 118,112 L 106,140 L 92,144 L 79,134 L 73,104 L 70,82 Z' },
-  // Europe
-  { id: 'eu', d: 'M 165,27 L 198,24 L 218,30 L 215,44 L 204,52 L 190,55 L 174,52 L 164,40 Z' },
-  // Africa
-  { id: 'af', d: 'M 158,52 L 196,50 L 220,58 L 233,78 L 223,112 L 200,132 L 184,128 L 160,108 L 154,78 Z' },
-  // Asia (main)
-  { id: 'as', d: 'M 200,24 L 278,16 L 325,28 L 322,44 L 305,62 L 282,72 L 264,72 L 244,62 L 226,58 L 218,50 L 218,44 L 200,44 Z' },
-  // Southeast Asia islands (simplified)
-  { id: 'sea', d: 'M 288,88 L 304,86 L 318,92 L 318,100 L 304,100 L 288,96 Z' },
-  // Australia
-  { id: 'au', d: 'M 252,106 L 302,104 L 316,116 L 308,136 L 286,142 L 264,138 L 248,128 Z' },
-  // Greenland
-  { id: 'gr', d: 'M 126,5 L 160,3 L 168,14 L 158,24 L 138,24 L 124,16 Z' },
-];
 
 export default function Destinations({ onNavigate }: DestinationsProps) {
   const [filter,   setFilter]   = useState('All');
@@ -138,10 +119,9 @@ export default function Destinations({ onNavigate }: DestinationsProps) {
               {/* Equator */}
               <line x1="0" y1="90" x2="360" y2="90" stroke="rgb(23 23 21 / 0.1)" strokeWidth="0.6" />
 
-              {/* Continent shapes */}
-              {CONTINENTS.map(c => (
-                <path key={c.id} d={c.d} fill="rgb(23 23 21 / 0.09)" stroke="rgb(23 23 21 / 0.12)" strokeWidth="0.5" />
-              ))}
+              {/* Accurate world land outline (Natural Earth 110m) */}
+              <path d={WORLD_LAND_PATH} fill="rgb(23 23 21 / 0.10)" stroke="rgb(23 23 21 / 0.22)" strokeWidth="0.25" strokeLinejoin="round" />
+
 
               {/* Destination pins */}
               {destinations.map(d => {
