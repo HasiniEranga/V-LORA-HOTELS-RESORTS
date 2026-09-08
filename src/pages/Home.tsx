@@ -56,13 +56,15 @@ export default function Home({ onNavigate, booking, setBooking, onConcierge }: H
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
 
-  // If video hasn't started within 8 s, fall back to the static image gracefully
+  // Nudge autoplay along once the element mounts (some browsers need an explicit play())
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      if (!videoReady) setVideoFailed(true);
-    }, 8000);
-    return () => clearTimeout(id);
-  }, [videoReady]);
+    const v = videoRef.current;
+    if (!v) return;
+    const tryPlay = () => { v.play().catch(() => {}); };
+    tryPlay();
+    v.addEventListener('loadeddata', tryPlay);
+    return () => v.removeEventListener('loadeddata', tryPlay);
+  }, []);
 
   // Slow Ken-Burns zoom: after video is ready, animate scale from 1.06 → 1
   useEffect(() => {
@@ -133,9 +135,9 @@ export default function Home({ onNavigate, booking, setBooking, onConcierge }: H
               loop
               playsInline
               poster={HERO_FALLBACK}
+              onLoadedData={() => setVideoReady(true)}
               onCanPlay={() => setVideoReady(true)}
               onError={() => setVideoFailed(true)}
-              onStalled={() => setVideoFailed(true)}
               className="absolute inset-0 w-full h-full object-cover"
               style={{
                 opacity: videoReady ? 0.72 : 0,
