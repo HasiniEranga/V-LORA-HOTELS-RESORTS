@@ -81,8 +81,9 @@ function CustomCursor() {
 }
 
 /* Global scroll-reveal observer */
-function useScrollReveals(currentPage: Page) {
+function useScrollReveals(currentPage: Page, loading: boolean) {
   useEffect(() => {
+    if (loading) return;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const observe = () => {
@@ -112,7 +113,7 @@ function useScrollReveals(currentPage: Page) {
       return () => obs?.disconnect();
     });
     return () => cancelAnimationFrame(frame);
-  }, [currentPage]);
+  }, [currentPage, loading]);
 }
 
 /* Page curtain transition — ivory wipe between page changes */
@@ -126,7 +127,7 @@ export default function App() {
   const [curtain,       setCurtain]       = useState<CurtainPhase>('idle');
   const pendingPage = useRef<Page | null>(null);
 
-  useScrollReveals(currentPage);
+  useScrollReveals(currentPage, loading);
 
   const handleNavigate = useCallback((page: Page) => {
     if (page === currentPage) return;
