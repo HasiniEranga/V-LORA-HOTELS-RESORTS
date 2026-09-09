@@ -122,7 +122,8 @@ export default function Footer({ onNavigate }: { onNavigate: (p: Page) => void }
         </div>
 
         {/* Bottom bar */}
-        <div className="rule-light pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+          style={{ borderTop: '1px solid rgb(244 240 232 / 0.1)' }}>
           <div style={{ fontSize: 10, color: 'rgb(244 240 232 / 0.2)', letterSpacing: '0.08em' }}>
             © 2026 VÉLORA Hotels &amp; Resorts. All rights reserved.
           </div>
