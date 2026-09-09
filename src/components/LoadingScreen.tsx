@@ -1,13 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+/**
+ * Shows for at least MIN_MS, then leaves as soon as the hero video is
+ * `ready` — so the loader hands off straight into the playing video.
+ * Never waits longer than MAX_MS so a slow/failed video can't hang it.
+ */
+export default function LoadingScreen({ onComplete, ready = true }: { onComplete: () => void; ready?: boolean }) {
   const [, setPct] = useState(0);
   const [out, setOut] = useState(false);
+  const readyRef = useRef(ready);
+  const leaving = useRef(false);
+
+  useEffect(() => { readyRef.current = ready; }, [ready]);
 
   useEffect(() => {
+    const MIN_MS = 2400, MAX_MS = 7000, start = Date.now();
     const step = setInterval(() => setPct(p => Math.min(p + 1.2, 100)), 28);
-    const done = setTimeout(() => { setOut(true); setTimeout(onComplete, 700); }, 2800);
-    return () => { clearInterval(step); clearTimeout(done); };
+    const leave = () => {
+      if (leaving.current) return;
+      leaving.current = true;
+      setOut(true);
+      setTimeout(onComplete, 700);
+    };
+    const poll = setInterval(() => {
+      const elapsed = Date.now() - start;
+      if ((elapsed >= MIN_MS && readyRef.current) || elapsed >= MAX_MS) {
+        clearInterval(poll);
+        leave();
+      }
+    }, 120);
+    return () => { clearInterval(step); clearInterval(poll); };
   }, [onComplete]);
 
   return (

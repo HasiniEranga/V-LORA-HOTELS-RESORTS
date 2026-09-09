@@ -11,6 +11,7 @@ import Stays from './pages/Stays';
 import Experiences from './pages/Experiences';
 import Offers from './pages/Offers';
 import Journey from './pages/Journey';
+import heroVideo from '@/imports/IMG_0664__1_.MP4';
 
 const defaultBooking: BookingState = {
   destination: '',
@@ -137,6 +138,7 @@ export default function App() {
   const [booking,       setBooking]       = useState<BookingState>(defaultBooking);
   const [showConcierge, setShowConcierge] = useState(false);
   const [curtain,       setCurtain]       = useState<CurtainPhase>('idle');
+  const [heroReady,     setHeroReady]     = useState(false);
   const pendingPage = useRef<Page | null>(null);
 
   useScrollReveals(currentPage, loading);
@@ -172,8 +174,23 @@ export default function App() {
     <div className="grain-overlay-wrapper relative">
       {/* Loader overlays the app while it boots; the home page mounts
           behind it (dark hero already painted) so there is no light flash
-          when the loader fades out. */}
-      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+          when the loader fades out. The loader also waits for the hero
+          video to buffer, then fades straight into the playing video. */}
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} ready={heroReady} />}
+      {loading && (
+        <video
+          src={heroVideo}
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+          onCanPlayThrough={() => setHeroReady(true)}
+          onLoadedData={() => setHeroReady(true)}
+          onError={() => setHeroReady(true)}
+          style={{ position: 'fixed', width: 1, height: 1, opacity: 0, pointerEvents: 'none', bottom: 0, left: 0 }}
+        />
+      )}
       <div className="grain-overlay" aria-hidden="true" />
       <CustomCursor />
 
