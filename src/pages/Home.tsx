@@ -405,7 +405,7 @@ export default function Home({ onNavigate, booking, setBooking, onConcierge }: H
         </div>
 
         {/* Dot indicators — mobile only */}
-        <div className="flex justify-center gap-2 mt-5 sm:hidden">
+        <div className="flex flex-wrap justify-center items-center gap-x-1.5 gap-y-2 mt-5 px-6 sm:hidden">
           {properties.map((_, i) => (
             <button
               key={i}
@@ -414,8 +414,8 @@ export default function Home({ onNavigate, booking, setBooking, onConcierge }: H
                 if (!el) return;
                 el.scrollTo({ left: i * el.offsetWidth, behavior: 'smooth' });
               }}
-              className="focus:outline-none touch-target"
-              style={{ padding: 6 }}
+              className="focus:outline-none flex items-center justify-center flex-shrink-0"
+              style={{ height: 24, padding: '0 3px' }}
               aria-label={`Go to slide ${i + 1}`}
             >
               <div style={{ width: activeSlide === i ? 20 : 6, height: 4, background: activeSlide === i ? '#171715' : 'rgb(23 23 21 / 0.2)', transition: 'width 0.35s ease, background 0.35s ease', borderRadius: 2 }} />
