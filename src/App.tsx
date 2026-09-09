@@ -11,7 +11,6 @@ import Stays from './pages/Stays';
 import Experiences from './pages/Experiences';
 import Offers from './pages/Offers';
 import Journey from './pages/Journey';
-import heroVideo from '@/imports/IMG_0664__1_.MP4';
 
 const defaultBooking: BookingState = {
   destination: '',
@@ -168,28 +167,13 @@ export default function App() {
   const transparentNavPages: Page[] = ['home'];
   const isTransparent = transparentNavPages.includes(currentPage);
 
-  if (loading) {
-    return (
-      <>
-        <LoadingScreen onComplete={() => setLoading(false)} />
-        {/* Preload the hero video during the loading screen so it plays
-            the moment the home page appears. */}
-        <video
-          src={heroVideo}
-          muted
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          tabIndex={-1}
-          style={{ position: 'fixed', width: 1, height: 1, opacity: 0, pointerEvents: 'none', bottom: 0, left: 0 }}
-        />
-      </>
-    );
-  }
-
   return (
     <CurrencyProvider>
     <div className="grain-overlay-wrapper relative">
+      {/* Loader overlays the app while it boots; the home page mounts
+          behind it (dark hero already painted) so there is no light flash
+          when the loader fades out. */}
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       <div className="grain-overlay" aria-hidden="true" />
       <CustomCursor />
 
