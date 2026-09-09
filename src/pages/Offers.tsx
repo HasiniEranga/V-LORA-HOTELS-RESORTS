@@ -16,7 +16,8 @@ const STEPS = [
   { num: 3, label: 'Guests', next: 'Room' },
   { num: 4, label: 'Room', next: 'Extras' },
   { num: 5, label: 'Extras', next: 'Review' },
-  { num: 6, label: 'Review', next: '' },
+  { num: 6, label: 'Review', next: 'Payment' },
+  { num: 7, label: 'Payment', next: '' },
 ];
 
 function CalendarPicker({ checkIn, checkOut, onChange }: { checkIn: string; checkOut: string; onChange: (ci: string, co: string) => void }) {
@@ -128,6 +129,7 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
   const [error, setError] = useState('');
   const [stepDir, setStepDir]       = useState<'forward' | 'back'>('forward');
   const [stepKey, setStepKey]       = useState(0);
+  const [guest, setGuest] = useState({ name: '', email: '', card: '', expiry: '', cvc: '' });
 
   const { fmt } = useCurrency();
   const allRooms = properties.flatMap(p => p.rooms);
@@ -149,22 +151,29 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
     if (bookingStep === 2 && (!booking.checkIn || !booking.checkOut)) { setError('Please select your check-in and check-out dates.'); return false; }
     if (bookingStep === 2 && booking.checkIn >= booking.checkOut) { setError('Check-out must be after check-in.'); return false; }
     if (bookingStep === 4 && !booking.selectedRoom) { setError('Please select a room.'); return false; }
+    if (bookingStep === 7) {
+      if (!guest.name.trim()) { setError('Please enter the name for the reservation.'); return false; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(guest.email)) { setError('Please enter a valid email address.'); return false; }
+      if (guest.card.replace(/\s/g, '').length < 12) { setError('Please enter a valid card number.'); return false; }
+      if (!/^\d{2}\/\d{2}$/.test(guest.expiry)) { setError('Please enter the card expiry as MM/YY.'); return false; }
+      if (guest.cvc.length < 3) { setError('Please enter the card security code (CVC).'); return false; }
+    }
     setError('');
     return true;
   };
 
   const goNext = () => {
     if (!validateStep()) return;
-    if (bookingStep === 6) {
+    if (bookingStep === 7) {
       const confNum = `VEL-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      setBooking({ ...booking, confirmed: true, confirmationNumber: confNum, step: 6, totalPrice: grandTotal });
+      setBooking({ ...booking, confirmed: true, confirmationNumber: confNum, step: 7, totalPrice: grandTotal });
       onNavigate('journey');
       return;
     }
     setStepDir('forward');
     setStepKey(k => k + 1);
-    setBookingStep(s => Math.min(s + 1, 6));
-    setBooking({ ...booking, step: Math.min(bookingStep + 1, 6) });
+    setBookingStep(s => Math.min(s + 1, 7));
+    setBooking({ ...booking, step: Math.min(bookingStep + 1, 7) });
   };
 
   const goPrev = () => {
@@ -528,6 +537,65 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
                 </div>
               )}
 
+              {/* Step 7: Guest details & Payment */}
+              {bookingStep === 7 && (
+                <div>
+                  <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, color: '#171715', marginBottom: 6 }}>
+                    Guest details &amp; payment.
+                  </div>
+                  <p className="text-xs mb-6" style={{ color: '#89917F' }}>
+                    Amount due today <strong style={{ color: '#171715' }}>{fmt(grandTotal)}</strong>. Secured with 256-bit encryption.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <label className="block">
+                      <span className="text-[9px] tracking-[0.2em] uppercase" style={{ color: '#89917F' }}>Full name</span>
+                      <input value={guest.name} onChange={e => setGuest({ ...guest, name: e.target.value })}
+                        placeholder="Jane Doe" autoComplete="name"
+                        className="w-full mt-1.5 bg-transparent focus:outline-none" style={{ fontSize: 15, color: '#171715', borderBottom: '1px solid rgb(23 23 21 / 0.18)', paddingBottom: 8 }} />
+                    </label>
+                    <label className="block">
+                      <span className="text-[9px] tracking-[0.2em] uppercase" style={{ color: '#89917F' }}>Email</span>
+                      <input value={guest.email} onChange={e => setGuest({ ...guest, email: e.target.value })}
+                        placeholder="jane@email.com" type="email" autoComplete="email"
+                        className="w-full mt-1.5 bg-transparent focus:outline-none" style={{ fontSize: 15, color: '#171715', borderBottom: '1px solid rgb(23 23 21 / 0.18)', paddingBottom: 8 }} />
+                    </label>
+                  </div>
+
+                  <label className="block mb-4">
+                    <span className="text-[9px] tracking-[0.2em] uppercase" style={{ color: '#89917F' }}>Card number</span>
+                    <input value={guest.card}
+                      onChange={e => { const v = e.target.value.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim(); setGuest({ ...guest, card: v }); }}
+                      placeholder="4242 4242 4242 4242" inputMode="numeric" autoComplete="cc-number"
+                      className="w-full mt-1.5 bg-transparent focus:outline-none" style={{ fontSize: 15, color: '#171715', borderBottom: '1px solid rgb(23 23 21 / 0.18)', paddingBottom: 8, letterSpacing: '0.08em' }} />
+                  </label>
+
+                  <div className="grid grid-cols-2 gap-4 mb-5">
+                    <label className="block">
+                      <span className="text-[9px] tracking-[0.2em] uppercase" style={{ color: '#89917F' }}>Expiry (MM/YY)</span>
+                      <input value={guest.expiry}
+                        onChange={e => { let v = e.target.value.replace(/\D/g, '').slice(0, 4); if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2); setGuest({ ...guest, expiry: v }); }}
+                        placeholder="09/28" inputMode="numeric" autoComplete="cc-exp"
+                        className="w-full mt-1.5 bg-transparent focus:outline-none" style={{ fontSize: 15, color: '#171715', borderBottom: '1px solid rgb(23 23 21 / 0.18)', paddingBottom: 8 }} />
+                    </label>
+                    <label className="block">
+                      <span className="text-[9px] tracking-[0.2em] uppercase" style={{ color: '#89917F' }}>CVC</span>
+                      <input value={guest.cvc}
+                        onChange={e => setGuest({ ...guest, cvc: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                        placeholder="123" inputMode="numeric" autoComplete="cc-csc"
+                        className="w-full mt-1.5 bg-transparent focus:outline-none" style={{ fontSize: 15, color: '#171715', borderBottom: '1px solid rgb(23 23 21 / 0.18)', paddingBottom: 8 }} />
+                    </label>
+                  </div>
+
+                  <div className="flex items-start gap-2 p-3" style={{ background: 'rgb(166 138 99 / 0.08)', border: '1px solid rgb(166 138 99 / 0.2)' }}>
+                    <span style={{ fontSize: 13 }}>🔒</span>
+                    <span className="text-[11px] leading-relaxed" style={{ color: '#596054' }}>
+                      This is a demonstration checkout for a fictional resort — <strong>no real payment is taken and no card details are stored or sent.</strong>
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Error — icon + high-contrast message (Nielsen #9) */}
               {error && (
                 <div className="mt-4 py-3 px-4 flex items-start gap-2.5" style={{ backgroundColor: 'rgb(166 88 63 / 0.08)', color: '#7A3320', border: '1px solid rgb(166 88 63 / 0.22)' }} role="alert" aria-live="assertive">
@@ -552,8 +620,8 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#596054'; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#171715'; }}
                 >
-                  {bookingStep === 6
-                    ? 'Complete Reservation'
+                  {bookingStep === 7
+                    ? 'Confirm & Pay'
                     : `Continue — ${STEPS[bookingStep - 1].next}`}
                   <ArrowRightIcon size={13} />
                 </button>
@@ -632,7 +700,7 @@ export default function Offers({ onNavigate, booking, setBooking }: OffersProps)
             className="flex-1 flex items-center justify-center gap-2 focus:outline-none"
             style={{ background: '#171715', color: '#F4F0E8', height: 52, fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase' }}
           >
-            {bookingStep === 6 ? 'Complete Reservation' : `Continue — ${STEPS[bookingStep - 1].next}`}
+            {bookingStep === 7 ? 'Confirm & Pay' : `Continue — ${STEPS[bookingStep - 1].next}`}
             <ArrowRightIcon size={12} />
           </button>
         </div>
