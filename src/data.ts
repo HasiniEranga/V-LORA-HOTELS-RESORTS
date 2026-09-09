@@ -404,7 +404,7 @@ const makeRooms = (prefix: string, multiplier: number = 1): Room[] => [
     view: 'Beach',
     bed: 'King',
     pricePerNight: Math.round(1050 * multiplier),
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900&h=600&fit=crop&auto=format',
+    image: IMG('bungalow.jpg'),
     description: 'Step straight from your deck onto the sand. A breezy beachfront bungalow with a hammock, direct sea access and the sound of the tide all day.',
     amenities: ['Direct beach access', 'Private deck', 'Hammock', 'Rain shower', 'Minibar', 'Breakfast'],
     hasPool: false,
